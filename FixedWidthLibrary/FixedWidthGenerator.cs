@@ -5,8 +5,6 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Formatting;
-using Microsoft.CodeAnalysis.Simplification;
 using Microsoft.CodeAnalysis.Text;
 
 
@@ -167,13 +165,8 @@ public class FixedWidthGenerator : IIncrementalGenerator
                   }
 
                   """;
-
-            var node = SyntaxFactory.ParseSyntaxTree(code).GetRoot();
-            node = node.NormalizeWhitespace().WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
-            var formattedNode = Formatter.Format(node, new AdhocWorkspace());
-            var formattedCode = formattedNode.ToFullString();
             
-            context.AddSource($"{className}.FixedWidth.g.cs", SourceText.From(formattedCode, Encoding.UTF8));
+            context.AddSource($"{className}.FixedWidth.g.cs", SourceText.From(code, Encoding.UTF8));
         }
     }
 }
