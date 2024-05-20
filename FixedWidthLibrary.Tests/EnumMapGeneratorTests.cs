@@ -1,45 +1,34 @@
 using System.Linq;
+using FixedWidthLibrary.Tests.Helper;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using VerifyXunit;
 using Xunit;
 
 namespace FixedWidthLibrary.Tests;
 
 public class EnumMapGeneratorTests
 {
-    private const string VectorClassText =
-        """
-        using System;
-        using FixedWidthLibrary;
-        using Generators;
-
-        [EnumMapMarker]
-        enum A {
-        	[EnumNotMapped] NotMapped,
-        	[EnumMap("BB")] B,
-        	[EnumMap("CC", 1)] C
-        }
-        """;
-
     [Fact]
     public void GenerateReportMethod()
     {
-        var generator = new EnumGenerator();
+        const string source =
+            """
+            using System;
+            using FixedWidthLibrary;
+            using Generators;
 
-        var driver = CSharpGeneratorDriver.Create(generator);
+            namespace Tests;
+            
+            [EnumMapMarker]
+            enum TestEnum {
+            	[EnumNotMapped] NotMapped,
+            	[EnumMap("A")] A,
+            	[EnumMap("B")] B,
+            	[EnumMap("C", 1)] C
+            }
+            """;
 
-        var compilation = CSharpCompilation.Create(nameof(FixedWidthGeneratorTests),
-            new[] { CSharpSyntaxTree.ParseText(VectorClassText) },
-            new[]
-            {
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location)
-            });
-
-        var runResult = driver.RunGenerators(compilation).GetRunResult();
-
-        // var generatedFileSyntax = runResult.GeneratedTrees.Single(t => t.FilePath.EndsWith("Vector3.g.cs"));
-
-        // Assert.Equal(ExpectedGeneratedClassText, generatedFileSyntax.GetText().ToString(),
-        //     ignoreLineEndingDifferences: true);
+        TestHelper.Verify<EnumGenerator>(source);
     }
 }

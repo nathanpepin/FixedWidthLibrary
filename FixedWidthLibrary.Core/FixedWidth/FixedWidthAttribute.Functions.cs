@@ -4,7 +4,12 @@ namespace FixedWidthLibraryCore;
 
 public partial class FixedWidthAttribute
 {
-    public string? ParseString(ReadOnlySpan<char> line)
+    public string ParseString(ReadOnlySpan<char> line)
+    {
+        return ParseNullableString(line) ?? throw new NullReferenceException();
+    }
+
+    public string? ParseNullableString(ReadOnlySpan<char> line)
     {
         var it = Trim
             ? Pad == Direction.Left
@@ -26,7 +31,8 @@ public partial class FixedWidthAttribute
             return new string(PadCharacter, Length);
 
         if (it.Length > Length && !AutoTrim)
-            throw new IndexOutOfRangeException($"String '{it}' is longer than the max length of {Length} and auto trim is turned off.");
+            throw new IndexOutOfRangeException(
+                $"String '{it}' is longer than the max length of {Length} and auto trim is turned off.");
 
         if (it.Length <= Length || !AutoTrim)
         {
@@ -53,12 +59,15 @@ public partial class FixedWidthAttribute
             : it.PadRight(Length, PadCharacter);
     }
 
-    public string Assign(string _, ReadOnlySpan<char> line) => ParseString(line) ?? throw new NullReferenceException();
-    public string? AssignNullable(string? _, ReadOnlySpan<char> line) => ParseString(line) ?? throw new NullReferenceException();
+    public void SetValue(ref string value, ReadOnlySpan<char> line) =>
+        value = ParseString(line) ?? throw new NullReferenceException();
 
-    public StringBuilder WriteToStringBuilder<T>(T value, StringBuilder? stringBuilder = null)
+    public void SetNullableValue(ref string? value, ReadOnlySpan<char> line) =>
+        value = ParseString(line);
+
+    public string GetStringValue<T>(T value)
     {
-        var output = value switch
+        return value switch
         {
             string it => SerializeToString(it),
             bool it => SerializeToString(it),
@@ -69,8 +78,16 @@ public partial class FixedWidthAttribute
             float it => SerializeToString(it),
             int it => SerializeToString(it),
             long it => SerializeToString(it),
+#if NET6_0_OR_GREATER
+            DateOnly it => SerializeToString(it),
+#endif
             _ => throw new NotSupportedException($"Type {value?.GetType().Name} is not supported")
         };
+    }
+
+    public StringBuilder WriteToStringBuilder<T>(T value, StringBuilder? stringBuilder = null)
+    {
+        var output = GetStringValue(value);
 
         return stringBuilder is null
             ? new StringBuilder(output)
@@ -79,19 +96,7 @@ public partial class FixedWidthAttribute
 
     public StreamWriter WriteToStream<T>(T value, StreamWriter streamWriter)
     {
-        var output = value switch
-        {
-            string it => SerializeToString(it),
-            bool it => SerializeToString(it),
-            char it => SerializeToString(it),
-            DateTime it => SerializeToString(it),
-            decimal it => SerializeToString(it),
-            double it => SerializeToString(it),
-            float it => SerializeToString(it),
-            int it => SerializeToString(it),
-            long it => SerializeToString(it),
-            _ => throw new NotSupportedException($"Type {value?.GetType().Name} is not supported")
-        };
+        var output = GetStringValue(value);
 
         streamWriter.WriteAsync(output);
 
@@ -100,19 +105,7 @@ public partial class FixedWidthAttribute
 
     public async Task<StreamWriter> WriteToStreamAsync<T>(T value, StreamWriter streamWriter)
     {
-        var output = value switch
-        {
-            string it => SerializeToString(it),
-            bool it => SerializeToString(it),
-            char it => SerializeToString(it),
-            DateTime it => SerializeToString(it),
-            decimal it => SerializeToString(it),
-            double it => SerializeToString(it),
-            float it => SerializeToString(it),
-            int it => SerializeToString(it),
-            long it => SerializeToString(it),
-            _ => throw new NotSupportedException($"Type {value?.GetType().Name} is not supported")
-        };
+        var output = GetStringValue(value);
 
         await streamWriter.WriteAsync(output);
 

@@ -4,7 +4,7 @@ namespace FixedWidthLibraryCore;
 
 public partial class FixedWidthAttribute
 {
-    public DateTime Assign(DateTime _, ReadOnlySpan<char> line)
+    public DateTime ParseDateTime(ReadOnlySpan<char> line)
     {
         var it = ParseString(line);
 
@@ -17,7 +17,7 @@ public partial class FixedWidthAttribute
         return SerializeToString(output);
     }
 
-    public DateTime? AssignNullable(DateTime? _, ReadOnlySpan<char> line)
+    public DateTime? ParseNullableDateTime(ReadOnlySpan<char> line)
     {
         var it = ParseString(line);
 
@@ -31,4 +31,10 @@ public partial class FixedWidthAttribute
         var output = value?.ToString(Format, CultureInfo);
         return SerializeToString(output);
     }
+
+    public void SetValue(ref DateTime value, ReadOnlySpan<char> line) =>
+        value = ParseDateTime(line);
+
+    public void SetNullableValue(ref DateTime? value, ReadOnlySpan<char> line) =>
+        value = ParseNullableDateTime(line);
 }

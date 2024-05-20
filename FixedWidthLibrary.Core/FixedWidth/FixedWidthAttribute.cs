@@ -28,7 +28,7 @@ public partial class FixedWidthAttribute : Attribute
 
     public int Length { get; }
 
-    public string? Format { get; set; }
+    public string Format { get; set; } = string.Empty;
 
     public char PadCharacter { get; set; } = ' ';
 

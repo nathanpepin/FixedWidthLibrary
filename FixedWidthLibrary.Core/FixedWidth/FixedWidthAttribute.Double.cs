@@ -4,12 +4,10 @@ namespace FixedWidthLibraryCore;
 
 public partial class FixedWidthAttribute
 {
-    public double Assign(double _, ReadOnlySpan<char> line)
+    public double ParseDouble(ReadOnlySpan<char> line)
     {
         var it = ParseString(line);
-
-        if (it is null) throw new NullReferenceException("Double cannot be null");
-
+        
         return double.Parse(it, NumberStyles, CultureInfo);
     }
 
@@ -19,7 +17,7 @@ public partial class FixedWidthAttribute
         return SerializeToString(output);
     }
 
-    public double? AssignNullable(double? _, ReadOnlySpan<char> line)
+    public double? ParseNullableDouble(ReadOnlySpan<char> line)
     {
         var it = ParseString(line);
 
@@ -33,4 +31,10 @@ public partial class FixedWidthAttribute
         var output = value?.ToString(Format, CultureInfo);
         return SerializeToString(output);
     }
+    
+    public void SetValue(ref double value, ReadOnlySpan<char> line) =>
+        value = ParseDouble(line);
+
+    public void SetNullableValue(ref double? value, ReadOnlySpan<char> line) =>
+        value = ParseNullableDouble(line);
 }

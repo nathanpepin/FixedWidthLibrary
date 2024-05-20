@@ -121,7 +121,8 @@ public class EnumGenerator : IIncrementalGenerator
                                              return value switch
                                              {
                                                  {{string.Join(",\n", stringToEnums)}}
-                                             }
+                                             };
+                                             
                                          """;
 
                     var enumToStrings = defaultEnumMap is null
@@ -135,6 +136,7 @@ public class EnumGenerator : IIncrementalGenerator
                                              {
                                                  {{string.Join(",\n", enumToStrings)}}
                                              };
+                                             
                                          """;
 
                     return new { StringToEnum = stringToEnum, EnumToString = enumToString };
@@ -148,27 +150,27 @@ public class EnumGenerator : IIncrementalGenerator
                   using System;
                   using System.Collections.Generic;
 
-                  namespace {{namespaceName}};
-
-                  public static partial class {{enumName}}Extensions
-                  {
-                        public MapToString(this {{enumName}} value, int version = 0)
-                        {
-                            {{string.Join("\n", enumMapGroups.Select(x => x.EnumToString))}}
+                  namespace {{namespaceName}} {
+                      public static partial class {{enumName}}Extensions
+                      {
+                            public MapToString(this {{enumName}} value, int version = 0)
+                            {
+                                {{string.Join("\n", enumMapGroups.Select(x => x.EnumToString))}}
+                                
+                                throw new ArgumentOutOfRangeException(nameof(version));
+                            }
                             
-                            throw new ArgumentOutOfRangeException(nameof(version));
-                        }
-                        
-                        public MapToEnum(this string value, int version = 0)
-                        {
-                           {{string.Join("\n", enumMapGroups.Select(x => x.StringToEnum))}}
-                           
-                           throw new ArgumentOutOfRangeException(nameof(version));
-                        }
+                            public MapToEnum(this string value, int version = 0)
+                            {
+                               {{string.Join("\n", enumMapGroups.Select(x => x.StringToEnum))}}
+                               
+                               throw new ArgumentOutOfRangeException(nameof(version));
+                            }
+                      }
                   }
                   """;
 
-            context.AddSource($"{enumName}.Maps.g.cs", SourceText.From(code, Encoding.UTF8));
+            context.AddSource($"{enumName}.Maps.g.cs", SourceText.From(Helper.FormatCode(code), Encoding.UTF8));
         }
     }
 }

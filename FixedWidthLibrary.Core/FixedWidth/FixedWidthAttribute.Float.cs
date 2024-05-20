@@ -4,12 +4,10 @@ namespace FixedWidthLibraryCore;
 
 public partial class FixedWidthAttribute
 {
-    public float Assign(float _, ReadOnlySpan<char> line)
+    public float ParseFloat(ReadOnlySpan<char> line)
     {
         var it = ParseString(line);
-
-        if (it is null) throw new NullReferenceException("Float cannot be null");
-
+        
         return float.Parse(it, NumberStyles, CultureInfo);
     }
 
@@ -19,7 +17,7 @@ public partial class FixedWidthAttribute
         return SerializeToString(output);
     }
 
-    public float? AssignNullable(float? _, ReadOnlySpan<char> line)
+    public float? ParseNullableFloat(ReadOnlySpan<char> line)
     {
         var it = ParseString(line);
 
@@ -32,5 +30,18 @@ public partial class FixedWidthAttribute
     {
         var output = value?.ToString(Format, CultureInfo);
         return SerializeToString(output);
+    }
+    
+    public void SetValue(ref float value, ReadOnlySpan<char> line) =>
+        value = ParseFloat(line);
+
+    public void SetNullableValue(ref float? value, ReadOnlySpan<char> line) =>
+        value = ParseNullableFloat(line);
+}
+
+public class FixedWidthAttributeInt : FixedWidthAttribute
+{
+    public FixedWidthAttributeInt(int start, int length) : base(start, length)
+    {
     }
 }

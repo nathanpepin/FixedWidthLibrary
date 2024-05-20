@@ -4,7 +4,7 @@ namespace FixedWidthLibraryCore;
 
 public partial class FixedWidthAttribute
 {
-    public decimal Assign(decimal _, ReadOnlySpan<char> line)
+    public decimal ParseDecimal(ReadOnlySpan<char> line)
     {
         var it = ParseString(line);
 
@@ -19,7 +19,7 @@ public partial class FixedWidthAttribute
         return SerializeToString(output);
     }
 
-    public decimal? AssignNullable(decimal? _, ReadOnlySpan<char> line)
+    public decimal? ParseNullableDecimal(ReadOnlySpan<char> line)
     {
         var it = ParseString(line);
 
@@ -33,4 +33,10 @@ public partial class FixedWidthAttribute
         var output = value?.ToString(Format, CultureInfo);
         return SerializeToString(output);
     }
+    
+    public void SetValue(ref decimal value, ReadOnlySpan<char> line) =>
+        value = ParseDecimal(line);
+
+    public void SetNullableValue(ref decimal? value, ReadOnlySpan<char> line) =>
+        value = ParseNullableDecimal(line);
 }

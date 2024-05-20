@@ -4,7 +4,7 @@ using FixedWidthLibraryCore;
 namespace FixedWidthLibrary.IntegrationTests;
 
 [FixedWidthMarker]
-public partial class MyClass
+public partial class TestClassFull
 {
     [FixedWidth(1, 30, Format = "yyyyMMdd", PadCharacter = '*', Pad = Direction.Left, Trim = true, AutoTrim = false, DateTimeStyles = DateTimeStyles.None,
         AutoTrimDirection = Direction.Left, FalseValue = "ad", TrueValue = "DSF", IndexOffset = 1, NumberStyles = NumberStyles.Any,
@@ -37,4 +37,14 @@ public partial class MyClass
 
     [FixedWidth(194, 100, PadCharacter = '_', Pad = Direction.Right, IndexOffset = 1)]
     public long Height { get; set; }
+    
+    [FixedWidth(194, 100, PadCharacter = '_', Pad = Direction.Right, IndexOffset = 1)]
+    public DateOnly D { get; set; }
+}
+
+[FixedWidthMarker]
+public partial class FixedWidthDateOnly
+{
+    [FixedWidth(1, 10, PadCharacter = '*', IndexOffset = 1, Format = "yyyyMMdd")]
+    public DateOnly Date { get; set; }
 }

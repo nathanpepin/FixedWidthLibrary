@@ -1,49 +1,83 @@
 using System.Linq;
+using FixedWidthLibrary.Tests.Helper;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using VerifyXunit;
 using Xunit;
 
 namespace FixedWidthLibrary.Tests;
 
 public class FixedWidthGeneratorTests
 {
-    private const string VectorClassText =
-        """
-        using System;
-        using FixedWidthLibrary;
-        using Generators;
-
-        namespace FixedWidthLibrary.Sample;
-
-        [FixedWidthMarker]
-        public partial class MyClass
-        {
-            [FixedWidth(0, 30, Format = "yyyyMMdd", PadCharacter = 'I', Pad = Direction.Left, Trim = true, AutoTrim = false, DateTimeStyles = DateTimeStyles.None,
-                AutoTrimDirection = Direction.Left, FalseValue = "ad", TrueValue = "DSF", IndexOffset = 1, NumberStyles = NumberStyles.Any,
-                RemoveChars = "abcd", WhiteSpaceToNull = true)]
-            public string FirstName { get; set; }
-        }
-        """;
-
     [Fact]
     public void GenerateReportMethod()
     {
-        var generator = new EnumGenerator();
-
-        var driver = CSharpGeneratorDriver.Create(generator);
-
-        var compilation = CSharpCompilation.Create(nameof(FixedWidthGeneratorTests),
-            new[] { CSharpSyntaxTree.ParseText(VectorClassText) },
-            new[]
+        const string source =
+            """
+            using FixedWidthLibraryCore;
+            
+            namespace Tests;
+            
+            [FixedWidthMarker]
+            public partial class MyClass
             {
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location)
-            });
+                [FixedWidth(0, 30)]
+                public string FirstName { get; set; }
+            }
+            """;
 
-        var runResult = driver.RunGenerators(compilation).GetRunResult();
+        TestHelper.Verify<FixedWidthGenerator>(source);
+    }
+    
+    [Fact]
+    public void GenerateReportMethod2()
+    {
+        const string source =
+            """
+            using FixedWidthLibraryCore;
+            
+            namespace Tests;
+            
+            [FixedWidthMarker]
+            public partial class TestClassFull
+            {
+                [FixedWidth(1, 30, Format = "yyyyMMdd", PadCharacter = '*', Pad = Direction.Left, Trim = true, AutoTrim = false, DateTimeStyles = DateTimeStyles.None,
+                    AutoTrimDirection = Direction.Left, FalseValue = "ad", TrueValue = "DSF", IndexOffset = 1, NumberStyles = NumberStyles.Any,
+                    RemoveChars = "abcd", WhiteSpaceToNull = true)]
+                public string FirstName { get; set; }
+            
+                [FixedWidth(31, 30, PadCharacter = '_', IndexOffset = 1)]
+                public string? LastName { get; set; }
+            
+                [FixedWidth(61, 3, PadCharacter = '*', IndexOffset = 1)]
+                public int Age { get; set; }
+            
+                [FixedWidth(64, 8, PadCharacter = '_', IndexOffset = 1, Format = "yyyyMMdd")]
+                public DateTime DateOfBirth { get; set; }
+            
+                [FixedWidth(72, 1, PadCharacter = '*', IndexOffset = 1, TrueValue = "Y", FalseValue = "N")]
+                public bool IsCool { get; set; }
+            
+                [FixedWidth(73, 1, PadCharacter = '_', IndexOffset = 1)]
+                public char Gender { get; set; }
+            
+                [FixedWidth(74, 100, PadCharacter = '*', IndexOffset = 1)]
+                public decimal Money { get; set; }
+            
+                [FixedWidth(174, 10, PadCharacter = '_', IndexOffset = 1)]
+                public double Debt { get; set; }
+            
+                [FixedWidth(184, 10, PadCharacter = '*', IndexOffset = 1)]
+                public float Wisdom { get; set; }
+            
+                [FixedWidth(194, 100, PadCharacter = '_', Pad = Direction.Right, IndexOffset = 1)]
+                public long Height { get; set; }
+                
+                [FixedWidth(194, 100, PadCharacter = '_', Pad = Direction.Right, IndexOffset = 1)]
+                public DateOnly D { get; set; }
+            }
+            """;
 
-        // var generatedFileSyntax = runResult.GeneratedTrees.Single(t => t.FilePath.EndsWith("Vector3.g.cs"));
-
-        // Assert.Equal(ExpectedGeneratedClassText, generatedFileSyntax.GetText().ToString(),
-        //     ignoreLineEndingDifferences: true);
+        TestHelper.Verify<FixedWidthGenerator>(source);
     }
 }

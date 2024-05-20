@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
@@ -14,42 +15,31 @@ namespace FixedWidthLibrary;
 public class FixedWidthGenerator : IIncrementalGenerator
 {
     private const string Namespace = "FixedWidthLibraryCore";
-    private const string FixedWidthFileAttributeName = "FixedWidthMarkerAttribute";
+    private const string FixedWidthMarkerAttributeName = "FixedWidthMarkerAttribute";
     private const string FixWidthPropertyAttributeName = "FixedWidthAttribute";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var provider = context.SyntaxProvider
             .CreateSyntaxProvider(
-                (s, _) => s is ClassDeclarationSyntax,
-                (ctx, _) => GetClassDeclarationForSourceGen(ctx))
-            .Where(t => t.fixWidthFileAttribute)
-            .Select((t, _) => t.Item1);
+                (s, _) => Predicate(s),
+                (ctx, _) => GetClassDeclarationForSourceGen(ctx));
 
-        // Generate the source code.
         context.RegisterSourceOutput(context.CompilationProvider.Combine(provider.Collect()),
             ((ctx, t) => GenerateCode(ctx, t.Left, t.Right)));
     }
 
-    private static (ClassDeclarationSyntax, bool fixWidthFileAttribute) GetClassDeclarationForSourceGen(
+    private static bool Predicate(SyntaxNode syntaxNode)
+    {
+        return syntaxNode is ClassDeclarationSyntax c &&
+               c.AttributeLists.Any() &&
+               c.AttributeLists.Any(x => x.Attributes.Any(a => a.Name.ToString() == "FixedWidthMarker"));
+    }
+
+    private static ClassDeclarationSyntax GetClassDeclarationForSourceGen(
         GeneratorSyntaxContext context)
     {
-        var classDeclarationSyntax = (ClassDeclarationSyntax)context.Node;
-
-        foreach (var attributeSyntax in classDeclarationSyntax
-                     .AttributeLists
-                     .SelectMany(attributeListSyntax => attributeListSyntax.Attributes))
-        {
-            if (ModelExtensions.GetSymbolInfo(context.SemanticModel, attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
-                continue;
-
-            var attributeName = attributeSymbol.ContainingType.ToDisplayString();
-
-            if (attributeName == $"{Namespace}.{FixedWidthFileAttributeName}")
-                return (classDeclarationSyntax, true);
-        }
-
-        return (classDeclarationSyntax, false);
+        return (ClassDeclarationSyntax)context.Node;
     }
 
     private void GenerateCode(SourceProductionContext context, Compilation compilation,
@@ -59,16 +49,17 @@ public class FixedWidthGenerator : IIncrementalGenerator
         {
             var semanticModel = compilation.GetSemanticModel(classDeclarationSyntax.SyntaxTree);
 
-            if (ModelExtensions.GetDeclaredSymbol(semanticModel, classDeclarationSyntax) is not INamedTypeSymbol classSymbol)
+            if (ModelExtensions.GetDeclaredSymbol(semanticModel, classDeclarationSyntax) is not INamedTypeSymbol
+                namedTypeSymbol)
                 continue;
 
-            var namespaceName = classSymbol.ContainingNamespace.ToDisplayString();
+            var namespaceName = namedTypeSymbol.ContainingNamespace.ToDisplayString();
 
             var className = classDeclarationSyntax.Identifier.Text;
 
-            var properties = classSymbol.GetMembers()
+            var properties = namedTypeSymbol.GetMembers()
                 .OfType<IPropertySymbol>()
-                .Where(x => x.GetAttributes().Any(ad => ad.AttributeClass?.Name == FixWidthPropertyAttributeName))
+                .Where(GetFixedWidthProperties)
                 .ToImmutableArray();
 
             var dictionaryBody = properties
@@ -76,7 +67,8 @@ public class FixedWidthGenerator : IIncrementalGenerator
                 {
                     var propertyName = x.Name;
 
-                    var fixedWidthPropertyAttribute = x.GetAttributes().First(ad => ad.AttributeClass?.Name == FixWidthPropertyAttributeName);
+                    var fixedWidthPropertyAttribute = x.GetAttributes()
+                        .First(ad => ad.AttributeClass?.Name == FixWidthPropertyAttributeName);
                     var start = (int)(fixedWidthPropertyAttribute.ConstructorArguments[0].Value ?? 0);
                     var length = (int)(fixedWidthPropertyAttribute.ConstructorArguments[1].Value ?? 0);
 
@@ -90,16 +82,37 @@ public class FixedWidthGenerator : IIncrementalGenerator
                           { "{{propertyName}}", new {{Namespace}}.FixedWidthAttribute({{start}}, {{length}}){{{string.Join(",", fixedWidthProperties)}}} }
                           """;
 
-                    return (dictionaryValue, length);
+                    return (dictionaryValue, start, length);
                 })
+                .OrderBy(x => x.start)
                 .ToImmutableArray();
 
             var assignments = properties
-                .Select(x => x.NullableAnnotation == NullableAnnotation.NotAnnotated
-                    ? $"""{x.Name} = FixedWidthAttributes["{x.Name}"].Assign({x.Name}, line);"""
-                    : $"""{x.Name} = FixedWidthAttributes["{x.Name}"].AssignNullable({x.Name}, line);""");
+                .Select(x =>
+                {
+                    var t = x.Type.Name;
 
-            var stringBuidlerWrites = properties
+                    var type = x.Type.Name switch
+                    {
+                        "String" => "String",
+                        "Boolean" => "Bool",
+                        "Int32" => "Int",
+                        "Int64" => "Long",
+                        "Decimal" => "Decimal",
+                        "Double" => "Double",
+                        "Single" => "Float",
+                        "Char" => "Char",
+                        "DateTime" => "DateTime",
+                        "DateOnly" => "DateOnly",
+                        _ => "No primitive type matched"
+                    };
+
+                    return x.NullableAnnotation == NullableAnnotation.NotAnnotated
+                        ? $"""{x.Name} = FixedWidthAttributes["{x.Name}"].Parse{type}(line);"""
+                        : $"""{x.Name} = FixedWidthAttributes["{x.Name}"].ParseNullable{type}(line);""";
+                });
+
+            var stringBuilderWrites = properties
                 .Select(x => $"""FixedWidthAttributes["{x.Name}"].WriteToStringBuilder({x.Name}, stringBuilder);""")
                 .ToImmutableArray();
 
@@ -142,31 +155,43 @@ public class FixedWidthGenerator : IIncrementalGenerator
                         {
                             stringBuilder ??= new StringBuilder();
                             
-                            {{string.Join("\n", stringBuidlerWrites)}}
+                            {{string.Join("\n", stringBuilderWrites)}}
                             
                             stringBuilder.AppendLine();
                             
                             return stringBuilder;
                         }
                         
-                        public StreamWriter WriteToStream<T>(StreamWriter streamWriter)
+                        public Stream WriteToStream(Stream stream)
                         {
+                            using var streamWriter = new StreamWriter(stream, leaveOpen: true);
+                            
                             {{string.Join("\n", streamWrites)}}
                             
-                            return streamWriter;
+                            return stream;
                         }
                         
-                        public async Task<StreamWriter> WriteToStreamAsync<T>(T value, StreamWriter streamWriter)
+                        public async Task<Stream> WriteToStreamAsync(Stream stream)
                         {
+                            using var streamWriter = new StreamWriter(stream, leaveOpen: true);
+                        
                             {{string.Join("\n", asyncStreamWrites)}}
                             
-                            return streamWriter;
+                            return stream;
                         }
                   }
 
                   """;
-            
-            context.AddSource($"{className}.FixedWidth.g.cs", SourceText.From(code, Encoding.UTF8));
+
+            var formattedCode = Helper.FormatCode(code);
+
+            context.AddSource($"{className}.FixedWidth.g.cs", SourceText.From(formattedCode, Encoding.UTF8));
         }
+    }
+
+    private static bool GetFixedWidthProperties(IPropertySymbol x)
+    {
+        var attributes = x.GetAttributes();
+        return attributes.Any(ad => ad.AttributeClass?.Name == "FixedWidthAttribute");
     }
 }

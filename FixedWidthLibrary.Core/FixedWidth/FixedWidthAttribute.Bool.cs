@@ -4,7 +4,7 @@ namespace FixedWidthLibraryCore;
 
 public partial class FixedWidthAttribute
 {
-    public bool Assign(bool _, ReadOnlySpan<char> line)
+    public bool ParseBool(ReadOnlySpan<char> line)
     {
         var it = ParseString(line);
 
@@ -14,10 +14,10 @@ public partial class FixedWidthAttribute
         if (string.IsNullOrWhiteSpace(it) && string.IsNullOrWhiteSpace(FalseValue))
             return false;
 
-        if (it != null && it.Equals(TrueValue))
+        if (it.Equals(TrueValue))
             return true;
 
-        if (it != null && it.Equals(FalseValue))
+        if (it.Equals(FalseValue))
             return false;
 
         throw new ArgumentOutOfRangeException(nameof(line));
@@ -29,7 +29,7 @@ public partial class FixedWidthAttribute
         return SerializeToString(output);
     }
 
-    public bool? AssignNullable(bool? _, ReadOnlySpan<char> line)
+    public bool? ParseNullableBool(ReadOnlySpan<char> line)
     {
         var it = ParseString(line);
 
@@ -39,10 +39,10 @@ public partial class FixedWidthAttribute
         if (string.IsNullOrWhiteSpace(it) && string.IsNullOrWhiteSpace(FalseValue))
             return false;
 
-        if (it != null && it.Equals(TrueValue))
+        if (it.Equals(TrueValue))
             return true;
 
-        if (it != null && it.Equals(FalseValue))
+        if (it.Equals(FalseValue))
             return false;
 
         return null;
@@ -56,4 +56,10 @@ public partial class FixedWidthAttribute
         var output = value.Value ? TrueValue : FalseValue;
         return SerializeToString(output);
     }
+
+    public void SetValue(ref bool value, ReadOnlySpan<char> line) =>
+        value = ParseBool(line);
+
+    public void SetNullableValue(ref bool? value, ReadOnlySpan<char> line) =>
+        value = ParseNullableBool(line);
 }
