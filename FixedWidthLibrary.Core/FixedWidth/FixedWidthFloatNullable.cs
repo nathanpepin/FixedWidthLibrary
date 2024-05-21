@@ -13,6 +13,6 @@ public sealed class FixedWidthFloatNullable(int start, int length) : FixedWidthE
     public override string SerializeToString(float? value)
     {
         var output = value?.ToString(Format, CultureInfo);
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }

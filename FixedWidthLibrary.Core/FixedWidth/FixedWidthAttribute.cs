@@ -9,21 +9,13 @@ namespace FixedWidthLibraryCore;
 /// Configure the properties as needed for the data type being serialized, otherwise leave default.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public partial class FixedWidthAttribute : Attribute
+public class FixedWidthAttribute(int start, int length) : Attribute
 {
-    public FixedWidthAttribute(int start, int length)
-    {
-        _start = start;
-        Length = length;
-    }
-
     public int IndexOffset { get; set; }
 
-    private readonly int _start;
+    public int Start => start - IndexOffset;
 
-    public int Start => _start - IndexOffset;
-
-    public int Length { get; }
+    public int Length { get; } = length;
 
     public string Format { get; set; } = string.Empty;
 
@@ -56,12 +48,12 @@ public partial class FixedWidthAttribute : Attribute
     internal StringComparer StringComparer => StringComparerValue.ToStringComparer();
     public StringComparerValue StringComparerValue { get; set; } = StringComparerValue.InvariantCulture;
 
-    public string ParseString(ReadOnlySpan<char> line)
+    protected string ParseString(ReadOnlySpan<char> line)
     {
         return ParseNullableString(line) ?? throw new NullReferenceException();
     }
 
-    public string? ParseNullableString(ReadOnlySpan<char> line)
+    protected string? ParseNullableString(ReadOnlySpan<char> line)
     {
         var it = Trim
             ? Pad == Direction.Left
@@ -77,7 +69,7 @@ public partial class FixedWidthAttribute : Attribute
             : RemoveChars.Aggregate(it, (current, c) => current.Trim(c));
     }
 
-    public string SerializeToString(string? it)
+    protected string SerializeToFixedWidthString(string? it)
     {
         if (it is null)
             return new string(PadCharacter, Length);

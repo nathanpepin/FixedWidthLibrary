@@ -15,7 +15,7 @@ public sealed class FixedWidthDateOnlyNullable(int start, int length) : FixedWid
     public override string SerializeToString(DateOnly? value)
     {
         var output = value?.ToString(Format, CultureInfo);
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }
 #endif

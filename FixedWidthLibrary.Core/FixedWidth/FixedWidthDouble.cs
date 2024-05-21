@@ -12,6 +12,6 @@ public sealed class FixedWidthDouble(int start, int length) : FixedWidthElement<
     public override string SerializeToString(double value)
     {
         var output = value.ToString(Format, CultureInfo);
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }

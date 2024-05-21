@@ -12,6 +12,6 @@ public sealed class FixedWidthFloat(int start, int length) : FixedWidthElement<f
     public override string SerializeToString(float value)
     {
         var output = value.ToString(Format, CultureInfo);
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }

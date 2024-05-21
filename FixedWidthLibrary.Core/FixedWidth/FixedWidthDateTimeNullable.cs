@@ -13,6 +13,6 @@ public sealed class FixedWidthDateTimeNullable(int start, int length) : FixedWid
     public override string SerializeToString(DateTime? value)
     {
         var output = value?.ToString(Format, CultureInfo);
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }

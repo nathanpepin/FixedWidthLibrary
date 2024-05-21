@@ -13,6 +13,6 @@ public sealed class FixedWidthLong(int start, int length) : FixedWidthElement<lo
     public override string SerializeToString(long value)
     {
         var output = value.ToString(Format, CultureInfo);
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }

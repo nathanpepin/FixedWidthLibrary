@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Frozen;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -11,12 +13,36 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace FixedWidthLibrary;
 
+public class FixedWidthAbstract(string typeName, string nullableTypeName)
+{
+    public string TypeName { get; } = typeName;
+    public string NullableTypeName { get; } = nullableTypeName;
+};
+
 [Generator]
 public class FixedWidthGenerator : IIncrementalGenerator
 {
     private const string Namespace = "FixedWidthLibraryCore";
     private const string FixedWidthMarkerAttributeName = "FixedWidthMarkerAttribute";
     private const string FixWidthPropertyAttributeName = "FixedWidthAttribute";
+
+    private static FixedWidthAbstract GetFixedWidthAbstract(ISymbol type)
+    {
+        return type.Name switch
+        {
+            "String" => new FixedWidthAbstract("FixedWidthString", "FixedWidthStringNullable"),
+            "Boolean" => new FixedWidthAbstract("FixedWidthBool", "FixedWidthBoolNullable"),
+            "Int32" => new FixedWidthAbstract("FixedWidthInt", "FixedWidthIntNullable"),
+            "Int64" => new FixedWidthAbstract("FixedWidthLong", "FixedWidthLongNullable"),
+            "Decimal" => new FixedWidthAbstract("FixedWidthDecimal", "FixedWidthDecimalNullable"),
+            "Double" => new FixedWidthAbstract("FixedWidthDouble", "FixedWidthDoubleNullable"),
+            "Single" => new FixedWidthAbstract("FixedWidthFloat", "FixedWidthFloatNullable"),
+            "Char" => new FixedWidthAbstract("FixedWidthChar", "FixedWidthCharNullable"),
+            "DateTime" => new FixedWidthAbstract("FixedWidthDateTime", "FixedWidthDateTimeNullable"),
+            "DateOnly" => new FixedWidthAbstract("FixedWidthDateOnly", "FixedWidthDateOnlyNullable"),
+        };
+    }
+
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -77,9 +103,13 @@ public class FixedWidthGenerator : IIncrementalGenerator
                         .Select(kv => $"{kv.Key} = {kv.Value.ToCSharpString()}")
                         .ToImmutableArray();
 
+                    var typeName = x.Type.NullableAnnotation == NullableAnnotation.Annotated
+                        ? GetFixedWidthAbstract(x.Type).NullableTypeName
+                        : GetFixedWidthAbstract(x.Type).TypeName;
+
                     var dictionaryValue =
                         $$"""
-                          { "{{propertyName}}", new {{Namespace}}.FixedWidthAttribute({{start}}, {{length}}){{{string.Join(",", fixedWidthProperties)}}} }
+                          { "{{propertyName}}", new {{Namespace}}.{{typeName}}({{start}}, {{length}}){{{string.Join(",", fixedWidthProperties)}}} }
                           """;
 
                     return (dictionaryValue, start, length);
@@ -88,29 +118,7 @@ public class FixedWidthGenerator : IIncrementalGenerator
                 .ToImmutableArray();
 
             var assignments = properties
-                .Select(x =>
-                {
-                    var t = x.Type.Name;
-
-                    var type = x.Type.Name switch
-                    {
-                        "String" => "String",
-                        "Boolean" => "Bool",
-                        "Int32" => "Int",
-                        "Int64" => "Long",
-                        "Decimal" => "Decimal",
-                        "Double" => "Double",
-                        "Single" => "Float",
-                        "Char" => "Char",
-                        "DateTime" => "DateTime",
-                        "DateOnly" => "DateOnly",
-                        _ => "No primitive type matched"
-                    };
-
-                    return x.NullableAnnotation == NullableAnnotation.NotAnnotated
-                        ? $"""{x.Name} = FixedWidthAttributes["{x.Name}"].Parse{type}(line);"""
-                        : $"""{x.Name} = FixedWidthAttributes["{x.Name}"].ParseNullable{type}(line);""";
-                });
+                .Select(x => $"""{x.Name} = FixedWidthAttributes["{x.Name}"].Parse(line);""");
 
             var stringBuilderWrites = properties
                 .Select(x => $"""FixedWidthAttributes["{x.Name}"].WriteToStringBuilder({x.Name}, stringBuilder);""")

@@ -12,7 +12,7 @@ public sealed class FixedWidthDateOnly(int start, int length) : FixedWidthElemen
     public override string SerializeToString(DateOnly value)
     {
         var output = value.ToString(Format, CultureInfo);
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }
 

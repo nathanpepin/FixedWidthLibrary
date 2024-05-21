@@ -13,6 +13,6 @@ public class FixedWidthIntNullable(int start, int length) : FixedWidthElement<in
     public override string SerializeToString(int? value)
     {
         var output = value?.ToString(Format, CultureInfo);
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }

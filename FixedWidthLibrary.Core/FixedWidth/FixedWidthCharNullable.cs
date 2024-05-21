@@ -10,6 +10,6 @@ public sealed class FixedWidthCharNullable(int start, int length) : FixedWidthEl
 
     public override string SerializeToString(char? value)
     {
-        return SerializeToString(value.ToString());
+        return SerializeToFixedWidthString(value.ToString());
     }
 }

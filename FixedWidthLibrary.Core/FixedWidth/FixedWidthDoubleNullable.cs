@@ -13,6 +13,6 @@ public sealed class FixedWidthDoubleNullable(int start, int length) : FixedWidth
     public override string SerializeToString(double? value)
     {
         var output = value?.ToString(Format, CultureInfo);
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }

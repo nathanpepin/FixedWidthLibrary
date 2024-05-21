@@ -14,6 +14,6 @@ public sealed class FixedWidthDateTime(int start, int length) : FixedWidthElemen
     public override string SerializeToString(DateTime value)
     {
         var output = value.ToString(Format, CultureInfo);
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }

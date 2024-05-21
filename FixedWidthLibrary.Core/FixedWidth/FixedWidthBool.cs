@@ -26,6 +26,6 @@ public sealed class FixedWidthBool(int start, int length) : FixedWidthElement<bo
     public override string SerializeToString(bool value)
     {
         var output = value ? TrueValue : FalseValue;
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }

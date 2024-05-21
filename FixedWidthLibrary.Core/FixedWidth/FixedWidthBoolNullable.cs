@@ -24,9 +24,9 @@ public class FixedWidthBoolNullable(int start, int length) : FixedWidthElement<b
     public override string SerializeToString(bool? value)
     {
         if (value is null)
-            return SerializeToString(string.Empty);
+            return SerializeToFixedWidthString(string.Empty);
 
         var output = value.Value ? TrueValue : FalseValue;
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }

@@ -11,6 +11,6 @@ public sealed class FixedWidthChar(int start, int length) : FixedWidthElement<ch
 
     public override string SerializeToString(char value)
     {
-        return SerializeToString(value.ToString());
+        return SerializeToFixedWidthString(value.ToString());
     }
 }

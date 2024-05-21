@@ -9,20 +9,19 @@ namespace FixedWidthLibrary.IntegrationTests.FixedWidth;
 [TestSubject(typeof(FixedWidthAttribute))]
 public class FixedWidthAttributeTest
 {
-    private readonly FixedWidthAttribute _fixedWidthAttribute;
-
-    public FixedWidthAttributeTest()
-    {
-        _fixedWidthAttribute = new FixedWidthAttribute(0, 5);
-    }
-
     [Fact]
     public void AssignNullable_ReturnsExpectedValue_ForPaddedLeftValue()
     {
-        _fixedWidthAttribute.Pad = Direction.Left;
+        //Arrange
+        var fixedWidthAttribute = new FixedWidthInt(0, 5) { Pad = Direction.Left };
+        const string testValue = " 12345";
 
-        var actual = _fixedWidthAttribute.ParseNullableInt(" 12345");
+        //Act
+        var deserialized = fixedWidthAttribute.Parse(" 12345");
+        var serialized = fixedWidthAttribute.SerializeToString(deserialized);
 
-        actual.Should().Be(123);
+        //Assert
+        deserialized.Should().Be(123);
+        serialized.Should().Be(testValue);
     }
 }

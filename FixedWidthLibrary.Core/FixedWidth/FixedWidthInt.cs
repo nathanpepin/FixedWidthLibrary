@@ -14,6 +14,6 @@ public sealed class FixedWidthInt(int start, int length) : FixedWidthElement<int
     public override string SerializeToString(int value)
     {
         var output = value.ToString(Format, CultureInfo);
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }

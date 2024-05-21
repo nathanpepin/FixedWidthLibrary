@@ -13,6 +13,6 @@ public sealed class FixedWidthDecimalNullable(int start, int length) : FixedWidt
     public override string SerializeToString(decimal? value)
     {
         var output = value?.ToString(Format, CultureInfo);
-        return SerializeToString(output);
+        return SerializeToFixedWidthString(output);
     }
 }
