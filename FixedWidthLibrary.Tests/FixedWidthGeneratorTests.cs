@@ -14,10 +14,11 @@ public class FixedWidthGeneratorTests
     {
         const string source =
             """
-            using FixedWidthLibraryCore;
-            
+            using FixedWidthLibraryCore.FixedWidth;
+            using FixedWidthLibraryCore.FixedWidthMarker;
+
             namespace Tests;
-            
+
             [FixedWidthMarker]
             public partial class MyClass
             {
@@ -28,16 +29,17 @@ public class FixedWidthGeneratorTests
 
         TestHelper.Verify<FixedWidthGenerator>(source);
     }
-    
+
     [Fact]
     public void GenerateReportMethod2()
     {
         const string source =
             """
-            using FixedWidthLibraryCore;
-            
+            using FixedWidthLibraryCore.FixedWidth;
+            using FixedWidthLibraryCore.FixedWidthMarker;
+
             namespace Tests;
-            
+
             [FixedWidthMarker]
             public partial class TestClassFull
             {
@@ -75,6 +77,42 @@ public class FixedWidthGeneratorTests
                 
                 [FixedWidth(194, 100, PadCharacter = '_', Pad = Direction.Right, IndexOffset = 1)]
                 public DateOnly D { get; set; }
+            }
+            """;
+
+        TestHelper.Verify<FixedWidthGenerator>(source);
+    }
+
+
+    [Fact]
+    public void GenerateReportMethod3()
+    {
+        const string source =
+            """
+            using FixedWidthLibraryCore.FixedWidth;
+            using FixedWidthLibraryCore.FixedWidthMarker;
+
+            namespace Tests;
+
+            public sealed class CustomMap(int start, int length) : FixedWidthElement<bool>(start, length)
+            {
+                public override bool Parse(ReadOnlySpan<char> line)
+                {
+                    var value = ParseString(line);
+                    return value == "Indigo";
+                }
+            
+                public override string SerializeToString(bool value)
+                {
+                    return value ? "Indigo" : "BAAA";
+                }
+            }
+
+            [FixedWidthMarker]
+            public partial class TestClassFull
+            {
+                [FixedWidth(31, 30, PadCharacter = '_', IndexOffset = 1, MapType = typeof(CustomMap))]
+                public string? LastName { get; set; }
             }
             """;
 

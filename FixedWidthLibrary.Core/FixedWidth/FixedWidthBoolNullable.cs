@@ -1,4 +1,4 @@
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public class FixedWidthBoolNullable(int start, int length) : FixedWidthElement<bool?>(start, length)
 {

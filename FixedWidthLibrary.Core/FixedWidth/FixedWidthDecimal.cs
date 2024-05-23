@@ -1,6 +1,4 @@
-using System.Text;
-
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public sealed class FixedWidthDecimal(int start, int length) : FixedWidthElement<decimal>(start, length)
 {

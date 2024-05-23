@@ -1,4 +1,4 @@
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public sealed class FixedWidthDateTimeNullable(int start, int length) : FixedWidthElement<DateTime?>(start, length)
 {

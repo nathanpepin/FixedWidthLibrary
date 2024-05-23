@@ -1,7 +1,4 @@
-using System;
-using System.Text;
-
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public sealed class FixedWidthInt(int start, int length) : FixedWidthElement<int>(start, length)
 {

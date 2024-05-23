@@ -1,6 +1,4 @@
-using System.Text;
-
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public sealed class FixedWidthBool(int start, int length) : FixedWidthElement<bool>(start, length)
 {

@@ -1,6 +1,4 @@
-using System.Text;
-
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public sealed class FixedWidthDateTime(int start, int length) : FixedWidthElement<DateTime>(start, length)
 {

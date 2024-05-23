@@ -1,4 +1,4 @@
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public sealed class FixedWidthFloatNullable(int start, int length) : FixedWidthElement<float?>(start, length)
 {

@@ -4,151 +4,116 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using FixedWidthLibraryCore.FixedWidth;
 
 namespace Tests;
 partial class TestClassFull
 {
-    public static Dictionary<string, FixedWidthLibraryCore.FixedWidthAttribute> FixedWidthAttributes = new Dictionary<string, FixedWidthLibraryCore.FixedWidthAttribute>
+    public static class FixedWidthMetaData
     {
+        public static readonly FixedWidthLibraryCore.FixedWidth.FixedWidthString FirstName = new FixedWidthLibraryCore.FixedWidth.FixedWidthString(1, 30)
         {
-            "FirstName",
-            new FixedWidthLibraryCore.FixedWidthString(1, 30)
-            {
-                Format = "yyyyMMdd",
-                PadCharacter = '*',
-                Pad = FixedWidthLibraryCore.Direction.Left,
-                Trim = true,
-                AutoTrim = false,
-                DateTimeStyles = null,
-                AutoTrimDirection = FixedWidthLibraryCore.Direction.Left,
-                FalseValue = "ad",
-                TrueValue = "DSF",
-                IndexOffset = 1,
-                NumberStyles = null,
-                RemoveChars = "abcd",
-                WhiteSpaceToNull = true
-            }
-        },
+            Format = "yyyyMMdd",
+            PadCharacter = '*',
+            Pad = null,
+            Trim = true,
+            AutoTrim = false,
+            DateTimeStyles = null,
+            AutoTrimDirection = null,
+            FalseValue = "ad",
+            TrueValue = "DSF",
+            IndexOffset = 1,
+            NumberStyles = null,
+            RemoveChars = "abcd",
+            WhiteSpaceToNull = true
+        };
+        public static readonly FixedWidthLibraryCore.FixedWidth.FixedWidthStringNullable LastName = new FixedWidthLibraryCore.FixedWidth.FixedWidthStringNullable(31, 30)
         {
-            "LastName",
-            new FixedWidthLibraryCore.FixedWidthStringNullable(31, 30)
-            {
-                PadCharacter = '_',
-                IndexOffset = 1
-            }
-        },
+            PadCharacter = '_',
+            IndexOffset = 1
+        };
+        public static readonly FixedWidthLibraryCore.FixedWidth.FixedWidthInt Age = new FixedWidthLibraryCore.FixedWidth.FixedWidthInt(61, 3)
         {
-            "Age",
-            new FixedWidthLibraryCore.FixedWidthInt(61, 3)
-            {
-                PadCharacter = '*',
-                IndexOffset = 1
-            }
-        },
+            PadCharacter = '*',
+            IndexOffset = 1
+        };
+        public static readonly FixedWidthLibraryCore.FixedWidth.FixedWidthDateTime DateOfBirth = new FixedWidthLibraryCore.FixedWidth.FixedWidthDateTime(64, 8)
         {
-            "DateOfBirth",
-            new FixedWidthLibraryCore.FixedWidthDateTime(64, 8)
-            {
-                PadCharacter = '_',
-                IndexOffset = 1,
-                Format = "yyyyMMdd"
-            }
-        },
+            PadCharacter = '_',
+            IndexOffset = 1,
+            Format = "yyyyMMdd"
+        };
+        public static readonly FixedWidthLibraryCore.FixedWidth.FixedWidthBool IsCool = new FixedWidthLibraryCore.FixedWidth.FixedWidthBool(72, 1)
         {
-            "IsCool",
-            new FixedWidthLibraryCore.FixedWidthBool(72, 1)
-            {
-                PadCharacter = '*',
-                IndexOffset = 1,
-                TrueValue = "Y",
-                FalseValue = "N"
-            }
-        },
+            PadCharacter = '*',
+            IndexOffset = 1,
+            TrueValue = "Y",
+            FalseValue = "N"
+        };
+        public static readonly FixedWidthLibraryCore.FixedWidth.FixedWidthChar Gender = new FixedWidthLibraryCore.FixedWidth.FixedWidthChar(73, 1)
         {
-            "Gender",
-            new FixedWidthLibraryCore.FixedWidthChar(73, 1)
-            {
-                PadCharacter = '_',
-                IndexOffset = 1
-            }
-        },
+            PadCharacter = '_',
+            IndexOffset = 1
+        };
+        public static readonly FixedWidthLibraryCore.FixedWidth.FixedWidthDecimal Money = new FixedWidthLibraryCore.FixedWidth.FixedWidthDecimal(74, 100)
         {
-            "Money",
-            new FixedWidthLibraryCore.FixedWidthDecimal(74, 100)
-            {
-                PadCharacter = '*',
-                IndexOffset = 1
-            }
-        },
+            PadCharacter = '*',
+            IndexOffset = 1
+        };
+        public static readonly FixedWidthLibraryCore.FixedWidth.FixedWidthDouble Debt = new FixedWidthLibraryCore.FixedWidth.FixedWidthDouble(174, 10)
         {
-            "Debt",
-            new FixedWidthLibraryCore.FixedWidthDouble(174, 10)
-            {
-                PadCharacter = '_',
-                IndexOffset = 1
-            }
-        },
+            PadCharacter = '_',
+            IndexOffset = 1
+        };
+        public static readonly FixedWidthLibraryCore.FixedWidth.FixedWidthFloat Wisdom = new FixedWidthLibraryCore.FixedWidth.FixedWidthFloat(184, 10)
         {
-            "Wisdom",
-            new FixedWidthLibraryCore.FixedWidthFloat(184, 10)
-            {
-                PadCharacter = '*',
-                IndexOffset = 1
-            }
-        },
+            PadCharacter = '*',
+            IndexOffset = 1
+        };
+        public static readonly FixedWidthLibraryCore.FixedWidth.FixedWidthLong Height = new FixedWidthLibraryCore.FixedWidth.FixedWidthLong(194, 100)
         {
-            "Height",
-            new FixedWidthLibraryCore.FixedWidthLong(194, 100)
-            {
-                PadCharacter = '_',
-                Pad = FixedWidthLibraryCore.Direction.Right,
-                IndexOffset = 1
-            }
-        },
+            PadCharacter = '_',
+            Pad = null,
+            IndexOffset = 1
+        };
+        public static readonly FixedWidthLibraryCore.FixedWidth.FixedWidthDateOnly D = new FixedWidthLibraryCore.FixedWidth.FixedWidthDateOnly(194, 100)
         {
-            "D",
-            new FixedWidthLibraryCore.FixedWidthDateOnly(194, 100)
-            {
-                PadCharacter = '_',
-                Pad = FixedWidthLibraryCore.Direction.Right,
-                IndexOffset = 1
-            }
-        }
-    };
+            PadCharacter = '_',
+            Pad = null,
+            IndexOffset = 1
+        };
+    }
+
     public const int TotalFixedWidthLength = 393;
     public TestClassFull(ReadOnlySpan<char> line)
     {
-        FirstName = FixedWidthAttributes["FirstName"].Parse(line);
-        LastName = FixedWidthAttributes["LastName"].Parse(line);
-        Age = FixedWidthAttributes["Age"].Parse(line);
-        DateOfBirth = FixedWidthAttributes["DateOfBirth"].Parse(line);
-        IsCool = FixedWidthAttributes["IsCool"].Parse(line);
-        Gender = FixedWidthAttributes["Gender"].Parse(line);
-        Money = FixedWidthAttributes["Money"].Parse(line);
-        Debt = FixedWidthAttributes["Debt"].Parse(line);
-        Wisdom = FixedWidthAttributes["Wisdom"].Parse(line);
-        Height = FixedWidthAttributes["Height"].Parse(line);
-        D = FixedWidthAttributes["D"].Parse(line);
-    }
-
-    public TestClassFull()
-    {
+        FirstName = FixedWidthMetaData.FirstName.Parse(line);
+        LastName = FixedWidthMetaData.LastName.Parse(line);
+        Age = FixedWidthMetaData.Age.Parse(line);
+        DateOfBirth = FixedWidthMetaData.DateOfBirth.Parse(line);
+        IsCool = FixedWidthMetaData.IsCool.Parse(line);
+        Gender = FixedWidthMetaData.Gender.Parse(line);
+        Money = FixedWidthMetaData.Money.Parse(line);
+        Debt = FixedWidthMetaData.Debt.Parse(line);
+        Wisdom = FixedWidthMetaData.Wisdom.Parse(line);
+        Height = FixedWidthMetaData.Height.Parse(line);
+        D = FixedWidthMetaData.D.Parse(line);
     }
 
     public StringBuilder WriteToStringBuilder(StringBuilder? stringBuilder = null)
     {
         stringBuilder ??= new StringBuilder();
-        FixedWidthAttributes["FirstName"].WriteToStringBuilder(FirstName, stringBuilder);
-        FixedWidthAttributes["LastName"].WriteToStringBuilder(LastName, stringBuilder);
-        FixedWidthAttributes["Age"].WriteToStringBuilder(Age, stringBuilder);
-        FixedWidthAttributes["DateOfBirth"].WriteToStringBuilder(DateOfBirth, stringBuilder);
-        FixedWidthAttributes["IsCool"].WriteToStringBuilder(IsCool, stringBuilder);
-        FixedWidthAttributes["Gender"].WriteToStringBuilder(Gender, stringBuilder);
-        FixedWidthAttributes["Money"].WriteToStringBuilder(Money, stringBuilder);
-        FixedWidthAttributes["Debt"].WriteToStringBuilder(Debt, stringBuilder);
-        FixedWidthAttributes["Wisdom"].WriteToStringBuilder(Wisdom, stringBuilder);
-        FixedWidthAttributes["Height"].WriteToStringBuilder(Height, stringBuilder);
-        FixedWidthAttributes["D"].WriteToStringBuilder(D, stringBuilder);
+        FixedWidthMetaData.FirstName.WriteToStringBuilder(FirstName, stringBuilder);
+        FixedWidthMetaData.LastName.WriteToStringBuilder(LastName, stringBuilder);
+        FixedWidthMetaData.Age.WriteToStringBuilder(Age, stringBuilder);
+        FixedWidthMetaData.DateOfBirth.WriteToStringBuilder(DateOfBirth, stringBuilder);
+        FixedWidthMetaData.IsCool.WriteToStringBuilder(IsCool, stringBuilder);
+        FixedWidthMetaData.Gender.WriteToStringBuilder(Gender, stringBuilder);
+        FixedWidthMetaData.Money.WriteToStringBuilder(Money, stringBuilder);
+        FixedWidthMetaData.Debt.WriteToStringBuilder(Debt, stringBuilder);
+        FixedWidthMetaData.Wisdom.WriteToStringBuilder(Wisdom, stringBuilder);
+        FixedWidthMetaData.Height.WriteToStringBuilder(Height, stringBuilder);
+        FixedWidthMetaData.D.WriteToStringBuilder(D, stringBuilder);
         stringBuilder.AppendLine();
         return stringBuilder;
     }
@@ -156,34 +121,34 @@ partial class TestClassFull
     public Stream WriteToStream(Stream stream)
     {
         using var streamWriter = new StreamWriter(stream, leaveOpen: true);
-        FixedWidthAttributes["FirstName"].WriteToStream(FirstName, streamWriter);
-        FixedWidthAttributes["LastName"].WriteToStream(LastName, streamWriter);
-        FixedWidthAttributes["Age"].WriteToStream(Age, streamWriter);
-        FixedWidthAttributes["DateOfBirth"].WriteToStream(DateOfBirth, streamWriter);
-        FixedWidthAttributes["IsCool"].WriteToStream(IsCool, streamWriter);
-        FixedWidthAttributes["Gender"].WriteToStream(Gender, streamWriter);
-        FixedWidthAttributes["Money"].WriteToStream(Money, streamWriter);
-        FixedWidthAttributes["Debt"].WriteToStream(Debt, streamWriter);
-        FixedWidthAttributes["Wisdom"].WriteToStream(Wisdom, streamWriter);
-        FixedWidthAttributes["Height"].WriteToStream(Height, streamWriter);
-        FixedWidthAttributes["D"].WriteToStream(D, streamWriter);
+        FixedWidthMetaData.FirstName.WriteToStream(FirstName, streamWriter);
+        FixedWidthMetaData.LastName.WriteToStream(LastName, streamWriter);
+        FixedWidthMetaData.Age.WriteToStream(Age, streamWriter);
+        FixedWidthMetaData.DateOfBirth.WriteToStream(DateOfBirth, streamWriter);
+        FixedWidthMetaData.IsCool.WriteToStream(IsCool, streamWriter);
+        FixedWidthMetaData.Gender.WriteToStream(Gender, streamWriter);
+        FixedWidthMetaData.Money.WriteToStream(Money, streamWriter);
+        FixedWidthMetaData.Debt.WriteToStream(Debt, streamWriter);
+        FixedWidthMetaData.Wisdom.WriteToStream(Wisdom, streamWriter);
+        FixedWidthMetaData.Height.WriteToStream(Height, streamWriter);
+        FixedWidthMetaData.D.WriteToStream(D, streamWriter);
         return stream;
     }
 
     public async Task<Stream> WriteToStreamAsync(Stream stream)
     {
         using var streamWriter = new StreamWriter(stream, leaveOpen: true);
-        await FixedWidthAttributes["FirstName"].WriteToStreamAsync(FirstName, streamWriter);
-        await FixedWidthAttributes["LastName"].WriteToStreamAsync(LastName, streamWriter);
-        await FixedWidthAttributes["Age"].WriteToStreamAsync(Age, streamWriter);
-        await FixedWidthAttributes["DateOfBirth"].WriteToStreamAsync(DateOfBirth, streamWriter);
-        await FixedWidthAttributes["IsCool"].WriteToStreamAsync(IsCool, streamWriter);
-        await FixedWidthAttributes["Gender"].WriteToStreamAsync(Gender, streamWriter);
-        await FixedWidthAttributes["Money"].WriteToStreamAsync(Money, streamWriter);
-        await FixedWidthAttributes["Debt"].WriteToStreamAsync(Debt, streamWriter);
-        await FixedWidthAttributes["Wisdom"].WriteToStreamAsync(Wisdom, streamWriter);
-        await FixedWidthAttributes["Height"].WriteToStreamAsync(Height, streamWriter);
-        await FixedWidthAttributes["D"].WriteToStreamAsync(D, streamWriter);
+        await FixedWidthMetaData.FirstName.WriteToStreamAsync(FirstName, streamWriter);
+        await FixedWidthMetaData.LastName.WriteToStreamAsync(LastName, streamWriter);
+        await FixedWidthMetaData.Age.WriteToStreamAsync(Age, streamWriter);
+        await FixedWidthMetaData.DateOfBirth.WriteToStreamAsync(DateOfBirth, streamWriter);
+        await FixedWidthMetaData.IsCool.WriteToStreamAsync(IsCool, streamWriter);
+        await FixedWidthMetaData.Gender.WriteToStreamAsync(Gender, streamWriter);
+        await FixedWidthMetaData.Money.WriteToStreamAsync(Money, streamWriter);
+        await FixedWidthMetaData.Debt.WriteToStreamAsync(Debt, streamWriter);
+        await FixedWidthMetaData.Wisdom.WriteToStreamAsync(Wisdom, streamWriter);
+        await FixedWidthMetaData.Height.WriteToStreamAsync(Height, streamWriter);
+        await FixedWidthMetaData.D.WriteToStreamAsync(D, streamWriter);
         return stream;
     }
 }

@@ -1,4 +1,4 @@
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public class FixedWidthIntNullable(int start, int length) : FixedWidthElement<int?>(start, length)
 {

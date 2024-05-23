@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public abstract class FixedWidthElement<T>(int start, int length) : FixedWidthAttribute(start, length)
 {

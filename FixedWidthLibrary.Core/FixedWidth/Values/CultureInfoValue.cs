@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth.Values;
 
 public enum CultureInfoValue
 {

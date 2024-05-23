@@ -1,4 +1,4 @@
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth.Values;
 
 public enum StringComparerValue
 {

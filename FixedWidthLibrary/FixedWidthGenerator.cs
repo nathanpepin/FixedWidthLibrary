@@ -22,7 +22,7 @@ public class FixedWidthAbstract(string typeName, string nullableTypeName)
 [Generator]
 public class FixedWidthGenerator : IIncrementalGenerator
 {
-    private const string Namespace = "FixedWidthLibraryCore";
+    private const string Namespace = "FixedWidthLibraryCore.FixedWidth";
     private const string FixedWidthMarkerAttributeName = "FixedWidthMarkerAttribute";
     private const string FixWidthPropertyAttributeName = "FixedWidthAttribute";
 
@@ -46,13 +46,31 @@ public class FixedWidthGenerator : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var provider = context.SyntaxProvider
-            .CreateSyntaxProvider(
-                (s, _) => Predicate(s),
-                (ctx, _) => GetClassDeclarationForSourceGen(ctx));
+        try
+        {
+            var provider = context.SyntaxProvider
+                .CreateSyntaxProvider(
+                    (s, _) => Predicate(s),
+                    (ctx, _) => GetClassDeclarationForSourceGen(ctx));
 
-        context.RegisterSourceOutput(context.CompilationProvider.Combine(provider.Collect()),
-            ((ctx, t) => GenerateCode(ctx, t.Left, t.Right)));
+            context.RegisterSourceOutput(context.CompilationProvider.Combine(provider.Collect()),
+                (ctx, t) => GenerateCode(ctx, t.Left, t.Right));
+        }
+        catch (Exception e)
+        {
+            var message =
+                $"""
+                 /*
+
+                 {e}
+
+                 */
+                 """;
+
+            context.RegisterPostInitializationOutput(ctx => ctx.AddSource(
+                "FixedWidthGeneratorError.g.cs",
+                SourceText.From(message, Encoding.UTF8)));
+        }
     }
 
     private static bool Predicate(SyntaxNode syntaxNode)
@@ -107,29 +125,38 @@ public class FixedWidthGenerator : IIncrementalGenerator
                         ? GetFixedWidthAbstract(x.Type).NullableTypeName
                         : GetFixedWidthAbstract(x.Type).TypeName;
 
+                    var mapType =
+                        fixedWidthPropertyAttribute
+                            .NamedArguments
+                            .FirstOrDefault(kv => kv.Key == "MapType")
+                            .Value
+                            .Value
+                            ?.ToString() ?? $"{Namespace}.{typeName}";
+
                     var dictionaryValue =
                         $$"""
-                          { "{{propertyName}}", new {{Namespace}}.{{typeName}}({{start}}, {{length}}){{{string.Join(",", fixedWidthProperties)}}} }
+                          public static readonly {{mapType}} {{propertyName}} = new {{mapType}}({{start}}, {{length}}){{{string.Join(",", fixedWidthProperties)}}};
                           """;
 
-                    return (dictionaryValue, start, length);
+                    return (dictionaryValue, start, length, mapType);
                 })
                 .OrderBy(x => x.start)
                 .ToImmutableArray();
 
             var assignments = properties
-                .Select(x => $"""{x.Name} = FixedWidthAttributes["{x.Name}"].Parse(line);""");
+                .Select(x => $"{x.Name} = FixedWidthMetaData.{x.Name}.Parse(line);")
+                .ToImmutableArray();
 
             var stringBuilderWrites = properties
-                .Select(x => $"""FixedWidthAttributes["{x.Name}"].WriteToStringBuilder({x.Name}, stringBuilder);""")
+                .Select(x => $"FixedWidthMetaData.{x.Name}.WriteToStringBuilder({x.Name}, stringBuilder);")
                 .ToImmutableArray();
 
             var streamWrites = properties
-                .Select(x => $"""FixedWidthAttributes["{x.Name}"].WriteToStream({x.Name}, streamWriter);""")
+                .Select(x => $"FixedWidthMetaData.{x.Name}.WriteToStream({x.Name}, streamWriter);")
                 .ToImmutableArray();
 
             var asyncStreamWrites = properties
-                .Select(x => $"""await FixedWidthAttributes["{x.Name}"].WriteToStreamAsync({x.Name}, streamWriter);""")
+                .Select(x => $"await FixedWidthMetaData.{x.Name}.WriteToStreamAsync({x.Name}, streamWriter);")
                 .ToImmutableArray();
 
             var code =
@@ -140,23 +167,22 @@ public class FixedWidthGenerator : IIncrementalGenerator
                   using System.Collections.Generic;
                   using System.Text;
                   using System.IO;
+                  using FixedWidthLibraryCore.FixedWidth;
 
                   namespace {{namespaceName}};
 
                   partial class {{className}}
                   {
-                        public static Dictionary<string, {{Namespace}}.FixedWidthAttribute> FixedWidthAttributes = new Dictionary<string, {{Namespace}}.FixedWidthAttribute>
-                      {
-                            {{string.Join(",\n", dictionaryBody.Select(x => x.dictionaryValue))}}
-                      };
-                      
+                  
+                        public static class FixedWidthMetaData
+                        {
+                            {{string.Join("\n", dictionaryBody.Select(x => x.dictionaryValue))}}
+                        }
+                  
                       public const int TotalFixedWidthLength = {{dictionaryBody.Sum(x => x.length)}};
                   
                         public {{className}}(ReadOnlySpan<char> line) {
                             {{string.Join("\n", assignments)}}
-                        }
-                        
-                        public {{className}}() {
                         }
                         
                         public StringBuilder WriteToStringBuilder(StringBuilder? stringBuilder = null)
@@ -188,7 +214,6 @@ public class FixedWidthGenerator : IIncrementalGenerator
                             return stream;
                         }
                   }
-
                   """;
 
             var formattedCode = Helper.FormatCode(code);

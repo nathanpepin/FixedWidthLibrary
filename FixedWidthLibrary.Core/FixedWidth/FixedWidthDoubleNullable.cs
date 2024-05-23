@@ -1,4 +1,4 @@
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public sealed class FixedWidthDoubleNullable(int start, int length) : FixedWidthElement<double?>(start, length)
 {

@@ -1,6 +1,4 @@
-using System.Text;
-
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 public sealed class FixedWidthDouble(int start, int length) : FixedWidthElement<double>(start, length)
 {
     public override double Parse(ReadOnlySpan<char> line)

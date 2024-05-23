@@ -1,5 +1,5 @@
 #if NET6_0_OR_GREATER
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public sealed class FixedWidthDateOnlyNullable(int start, int length) : FixedWidthElement<DateOnly?>(start, length)
 {

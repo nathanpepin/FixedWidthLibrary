@@ -1,4 +1,4 @@
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public sealed class FixedWidthCharNullable(int start, int length) : FixedWidthElement<char?>(start, length)
 {

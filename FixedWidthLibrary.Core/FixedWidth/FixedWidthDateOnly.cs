@@ -1,4 +1,4 @@
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 #if NET6_0_OR_GREATER
 public sealed class FixedWidthDateOnly(int start, int length) : FixedWidthElement<DateOnly>(start, length)

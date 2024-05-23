@@ -1,6 +1,4 @@
-using System.Text;
-
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 public sealed class FixedWidthFloat(int start, int length) : FixedWidthElement<float>(start, length)
 {
     public override float Parse(ReadOnlySpan<char> line)

@@ -1,4 +1,4 @@
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidthMarker;
 
 /// <summary>
 /// Enables source generation of the FixedWidth attribute properties

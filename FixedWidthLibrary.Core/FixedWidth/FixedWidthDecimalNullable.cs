@@ -1,4 +1,4 @@
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 public sealed class FixedWidthDecimalNullable(int start, int length) : FixedWidthElement<decimal?>(start, length)
 {

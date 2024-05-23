@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FixedWidthLibraryCore.FixedWidth;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using VerifyXunit;
@@ -21,7 +22,7 @@ public static class TestHelper
             .Where(s => !s.Contains("xunit"))
             .Select(s => MetadataReference.CreateFromFile(s))
             .Append(MetadataReference.CreateFromFile(
-                typeof(FixedWidthLibraryCore.FixedWidthAttribute).Assembly.Location))
+                typeof(FixedWidthAttribute).Assembly.Location))
             .ToList();
 
 

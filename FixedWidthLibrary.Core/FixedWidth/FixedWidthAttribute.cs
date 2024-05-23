@@ -1,6 +1,7 @@
 using System.Globalization;
+using FixedWidthLibraryCore.FixedWidth.Values;
 
-namespace FixedWidthLibraryCore;
+namespace FixedWidthLibraryCore.FixedWidth;
 
 /// <summary>
 /// When the containing class/struct/record has the FixedWidthMarker attribute, all properties with this attribute will be placed into a dictionary
@@ -9,7 +10,7 @@ namespace FixedWidthLibraryCore;
 /// Configure the properties as needed for the data type being serialized, otherwise leave default.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class FixedWidthAttribute(int start, int length) : Attribute
+public class FixedWidthAttribute(int start, int length) : Attribute, IFixedWidth
 {
     public int IndexOffset { get; set; }
 
@@ -48,6 +49,8 @@ public class FixedWidthAttribute(int start, int length) : Attribute
     internal StringComparer StringComparer => StringComparerValue.ToStringComparer();
     public StringComparerValue StringComparerValue { get; set; } = StringComparerValue.InvariantCulture;
 
+    public Type? MapType { get; set; }
+    
     protected string ParseString(ReadOnlySpan<char> line)
     {
         return ParseNullableString(line) ?? throw new NullReferenceException();
@@ -101,5 +104,18 @@ public class FixedWidthAttribute(int start, int length) : Attribute
         return Pad == Direction.Left
             ? it.PadLeft(Length, PadCharacter)
             : it.PadRight(Length, PadCharacter);
+    }
+
+    public object Parse(ReadOnlySpan<char> line)
+    {
+        return ParseString(line);
+    }
+
+    public string SerializeToString(object value)
+    {
+        if (value is string s)
+            return SerializeToFixedWidthString(s);
+
+        throw new InvalidCastException("Could not convert object to string");
     }
 }
