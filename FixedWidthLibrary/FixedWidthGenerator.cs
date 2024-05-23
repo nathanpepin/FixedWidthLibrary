@@ -99,6 +99,17 @@ public class FixedWidthGenerator : IIncrementalGenerator
 
             var namespaceName = namedTypeSymbol.ContainingNamespace.ToDisplayString();
 
+            var classAccessibility = compilation
+                    .GetSemanticModel(classDeclarationSyntax.SyntaxTree)
+                    .GetDeclaredSymbol(classDeclarationSyntax)
+                    ?.DeclaredAccessibility switch
+                {
+                    Accessibility.Public => "public",
+                    Accessibility.Private => "private",
+                    Accessibility.Internal => "internal",
+                    _ or null => ""
+                };
+
             var className = classDeclarationSyntax.Identifier.Text;
 
             var properties = namedTypeSymbol.GetMembers()
@@ -171,9 +182,8 @@ public class FixedWidthGenerator : IIncrementalGenerator
 
                   namespace {{namespaceName}};
 
-                  partial class {{className}}
+                  {{classAccessibility}} partial class {{className}}
                   {
-                  
                         public static class FixedWidthMetaData
                         {
                             {{string.Join("\n", dictionaryBody.Select(x => x.dictionaryValue))}}
