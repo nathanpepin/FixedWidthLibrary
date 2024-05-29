@@ -27,6 +27,7 @@ public class FixedWidthAttributeTest
         deserialized.Should().Be(123);
         serialized.Should().Be(testValue);
     }
+
 }
 
 public sealed class CustomMap(int start, int length) : FixedWidthElement<bool>(start, length)
@@ -42,10 +43,10 @@ public sealed class CustomMap(int start, int length) : FixedWidthElement<bool>(s
         return value ? "Indigo" : "BAAA";
     }
 }
-
-[FixedWidthMarker]
-public partial class TestClassFull
-{
-    [FixedWidth(31, 30, PadCharacter = '_', IndexOffset = 1, MapType = typeof(CustomMap))]
-    public string? LastName { get; set; }
-}
+//
+// [FixedWidthMarker]
+// public partial class TestClassFull
+// {
+//     [FixedWidth(31, 30, PadCharacter = '_', IndexOffset = 1, MapType = typeof(CustomMap))]
+//     public string? LastName { get; set; }
+// }
