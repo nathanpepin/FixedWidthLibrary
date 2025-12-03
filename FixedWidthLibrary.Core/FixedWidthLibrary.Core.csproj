@@ -3,14 +3,33 @@
     <PropertyGroup>
         <TargetFrameworks>net10.0</TargetFrameworks>
         <RootNamespace>FixedWidthLibraryCore</RootNamespace>
-        <PackageId>FixedWidthLibraryCore</PackageId>
+        <PackageId>FixedWidthLibrary.Core</PackageId>
         <ImplicitUsings>true</ImplicitUsings>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
+        <Authors>Nathan Pepin</Authors>
+        <Company>Nathan Pepin</Company>
+        <Product>FixedWidthLibrary</Product>
+        <Title>FixedWidthLibrary.Core</Title>
+        <Description>Core library for parsing and writing fixed-width records. Provides types, attributes, and helpers used by FixedWidthLibrary.</Description>
+        <PackageVersion>0.1.0</PackageVersion>
+        <PackageProjectUrl>https://github.com/nathanpepin/FixedWidthLibrary</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/nathanpepin/FixedWidthLibrary</RepositoryUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>fixed-width;fixed width;parser;serialization;etl;flat file</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="System.Memory" Version="4.6.3"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
 </Project>

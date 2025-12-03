@@ -10,6 +10,21 @@
         <RootNamespace>FixedWidthLibrary</RootNamespace>
         <PackageId>FixedWidthLibrary</PackageId>
         <IncludeBuildOutput>false</IncludeBuildOutput>
+        <Authors>Nathan Pepin</Authors>
+        <Company>Nathan Pepin</Company>
+        <Product>FixedWidthLibrary</Product>
+        <Title>FixedWidthLibrary - Source generator and analyzer</Title>
+        <Description>Roslyn analyzer and source generator for building fixed-width record readers/writers from attributes. Use with FixedWidthLibrary.Core.</Description>
+        <PackageVersion>0.1.0</PackageVersion>
+        <PackageProjectUrl>https://github.com/nathanpepin/FixedWidthLibrary</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/nathanpepin/FixedWidthLibrary</RepositoryUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>fixed-width;fixed width;analyzer;roslyn;source generator;code generation;serialization</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,5 +35,6 @@
     <ItemGroup>
         <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true"
               PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>
