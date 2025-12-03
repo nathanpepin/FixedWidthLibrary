@@ -16,7 +16,7 @@ public enum CultureInfoValue
 public static class CultureInfoValueExtensions
 {
     public static CultureInfo DefaultCulture { get; set; } = CultureInfo.InvariantCulture;
-    
+
     public static CultureInfo ToCultureInfo(this CultureInfoValue cultureValue)
     {
         return cultureValue switch

@@ -5,35 +5,35 @@
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <RootNamespace>FixedWidthLibrary.Tests</RootNamespace>
-		<Nullable>enable</Nullable>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Verify.XUnit" Version="24.2.0" />
-		<PackageReference Include="Verify.SourceGenerators" Version="2.2.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" PrivateAssets="all" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-		<PackageReference Include="xunit" Version="2.8.0" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.0">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="coverlet.collector" Version="6.0.4">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-	</ItemGroup>
-
     <ItemGroup>
-        <ProjectReference Include="..\FixedWidthLibrary.Core\FixedWidthLibrary.Core.csproj" />
-        <ProjectReference Include="..\FixedWidthLibrary\FixedWidthLibrary.csproj" />
+        <PackageReference Include="Verify.XUnit" Version="24.2.0"/>
+        <PackageReference Include="Verify.SourceGenerators" Version="2.2.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Helper\Snapshots\" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1"/>
+        <PackageReference Include="xunit" Version="2.8.0"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.0">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector" Version="6.0.4">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\FixedWidthLibrary.Core\FixedWidthLibrary.Core.csproj"/>
+        <ProjectReference Include="..\FixedWidthLibrary\FixedWidthLibrary.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Helper\Snapshots\"/>
     </ItemGroup>
 </Project>

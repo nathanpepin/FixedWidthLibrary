@@ -6,10 +6,8 @@ namespace FixedWidthLibrary.IntegrationTests.FixedWidth;
 [TestSubject(typeof(FixedWidthSByte))]
 public class FixedWidthSByteTest
 {
-
     [Fact]
     public void METHOD()
     {
-        
     }
 }

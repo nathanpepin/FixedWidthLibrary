@@ -4,24 +4,8 @@ using JetBrains.Annotations;
 
 namespace FixedWidthLibrary.IntegrationTests.FixedWidth;
 
-public interface IFixedWidthTest<T>
-{
-    void Input_Should_Equal_Theory(string input, T value);
-    void Input_Should_Serialize_To_Input(string input);
-}
-
-public interface IFixedWidthNonNullableTest<T> : IFixedWidthTest<T>
-{
-    void Input_Should_Throw_If_Not_Valid(string input);
-}
-
-public interface IFixedWidthNullableTest<T> : IFixedWidthTest<T>
-{
-    void Input_Should_Be_Null_If_Not_Valid(string input);
-}
-
 [TestSubject(typeof(FixedWidthBoolNullable))]
-public class FixedWidthTest : IFixedWidthNonNullableTest<bool>
+public class FixedWidthTest
 {
     [Theory]
     [InlineData("Y", true)]

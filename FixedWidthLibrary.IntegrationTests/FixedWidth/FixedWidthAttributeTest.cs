@@ -1,10 +1,5 @@
-using System;
 using JetBrains.Annotations;
-using Xunit;
-using FixedWidthLibraryCore;
-using FixedWidthLibraryCore.FixedWidth;
 using FixedWidthLibraryCore.FixedWidth.Values;
-using FixedWidthLibraryCore.FixedWidthMarker;
 using FluentAssertions;
 
 namespace FixedWidthLibrary.IntegrationTests.FixedWidth;
@@ -27,7 +22,6 @@ public class FixedWidthAttributeTest
         deserialized.Should().BeInRange(12345, 12345);
         serialized.Should().Be(testValue);
     }
-
 }
 
 public sealed class CustomMap(int start, int length) : FixedWidthElement<bool>(start, length)

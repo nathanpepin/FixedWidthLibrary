@@ -6,10 +6,8 @@ namespace FixedWidthLibrary.IntegrationTests.FixedWidth;
 [TestSubject(typeof(FixedWidthShortNullable))]
 public class FixedWidthShortNullableTest
 {
-
     [Fact]
     public void METHOD()
     {
-        
     }
 }

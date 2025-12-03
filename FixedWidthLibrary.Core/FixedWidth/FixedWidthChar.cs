@@ -1,4 +1,5 @@
 namespace FixedWidthLibraryCore.FixedWidth;
+
 public sealed class FixedWidthChar(int start, int length) : FixedWidthElement<char>(start, length)
 {
     public override char Parse(ReadOnlySpan<char> line)

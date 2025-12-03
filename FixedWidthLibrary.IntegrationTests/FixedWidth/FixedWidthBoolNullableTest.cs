@@ -12,7 +12,7 @@ public class FixedWidthBoolNullableTest
     {
         //Arrange
         var testClass = new NullableBoolTestClass(input);
-        
+
         //Act & Assert
         Assert.Equal(value, testClass.Result);
     }
@@ -27,7 +27,7 @@ public class FixedWidthBoolNullableTest
 
         //Act
         var result = testClass.WriteToStringBuilder().ToString()[..^2];
-
+        
         //Assert
         Assert.Equal(input, result);
     }
@@ -36,5 +36,6 @@ public class FixedWidthBoolNullableTest
 [FixedWidthMarker]
 internal partial class NullableBoolTestClass
 {
-    [FixedWidth(0, 1, TrueValue = "Y", FalseValue = "N")] public bool Result { get; set; }
+    [FixedWidth(0, 1, TrueValue = "Y", FalseValue = "N")]
+    public bool Result { get; set; }
 }

@@ -81,3 +81,4 @@
 //     [FixedWidth(194, 100, PadCharacter = '_', Pad = Direction.Right, IndexOffset = 1)]
 //     public DateOnly D { get; set; }
 // }
+

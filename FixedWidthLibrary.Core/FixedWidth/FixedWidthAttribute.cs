@@ -50,7 +50,7 @@ public class FixedWidthAttribute(int start, int length) : Attribute, IFixedWidth
     public StringComparerValue StringComparerValue { get; set; } = StringComparerValue.InvariantCulture;
 
     public Type? MapType { get; set; }
-    
+
     protected string ParseString(ReadOnlySpan<char> line)
     {
         return ParseNullableString(line) ?? throw new NullReferenceException();

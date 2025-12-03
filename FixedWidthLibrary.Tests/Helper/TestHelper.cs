@@ -35,7 +35,7 @@ public static class TestHelper
         GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
 
         driver = driver.RunGenerators(compilation);
-        
+
         return Verifier
             .Verify(driver)
             .UseDirectory("Snapshots");

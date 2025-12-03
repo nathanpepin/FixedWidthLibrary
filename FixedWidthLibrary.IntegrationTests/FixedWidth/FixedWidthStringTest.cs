@@ -6,10 +6,8 @@ namespace FixedWidthLibrary.IntegrationTests.FixedWidth;
 [TestSubject(typeof(FixedWidthString))]
 public class FixedWidthStringTest
 {
-
     [Fact]
     public void METHOD()
     {
-        
     }
 }

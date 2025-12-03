@@ -116,39 +116,39 @@ public class FixedWidthGenerator : IIncrementalGenerator
                     {
                         {{string.Join("\n", metaDataVales)}}
                     }
-              
+
                     public const int TotalFixedWidthLength = {{fixedWidthLength}};
-              
+
                     public {{classDeclarationSyntax.Identifier.Text}}(ReadOnlySpan<char> line) {
                         {{string.Join("\n", GetConstructorAssignments(properties))}}
                     }
-              
+
                     public StringBuilder WriteToStringBuilder(StringBuilder? stringBuilder = null)
                     {
                         stringBuilder ??= new StringBuilder();
-              
+
                         {{string.Join("\n", GetStringBuilderWrites(properties))}}
-              
+
                         stringBuilder.AppendLine();
-              
+
                         return stringBuilder;
                     }
-              
+
                     public Stream WriteToStream(Stream stream)
                     {
                         using var streamWriter = new StreamWriter(stream, leaveOpen: true);
-              
+
                         {{string.Join("\n", GetStreamWrites(properties))}}
-              
+
                         return stream;
                     }
-              
+
                     public async Task<Stream> WriteToStreamAsync(Stream stream)
                     {
                         using var streamWriter = new StreamWriter(stream, leaveOpen: true);
-              
+
                         {{string.Join("\n", GetAsyncStreamWrites(properties))}}
-              
+
                         return stream;
                     }
               }
