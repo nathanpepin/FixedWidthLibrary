@@ -16,7 +16,7 @@ public class FixedWidthAttributeTest
     public void AssignNullable_ReturnsExpectedValue_ForPaddedLeftValue()
     {
         //Arrange
-        var fixedWidthAttribute = new FixedWidthInt(0, 5) { Pad = Direction.Left };
+        var fixedWidthAttribute = new FixedWidthInt(0, 6) { Pad = Direction.Left };
         const string testValue = " 12345";
 
         //Act
@@ -24,7 +24,7 @@ public class FixedWidthAttributeTest
         var serialized = fixedWidthAttribute.SerializeToString(deserialized);
 
         //Assert
-        deserialized.Should().Be(123);
+        deserialized.Should().BeInRange(12345, 12345);
         serialized.Should().Be(testValue);
     }
 

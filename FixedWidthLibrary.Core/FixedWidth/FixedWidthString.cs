@@ -7,7 +7,7 @@ public sealed class FixedWidthString(int start, int length) : FixedWidthElement<
         return ParseString(line);
     }
 
-    public override string SerializeToString(string value)
+    public override string SerializeToString(string? value)
     {
         return SerializeToFixedWidthString(value);
     }

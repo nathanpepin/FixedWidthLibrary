@@ -4,7 +4,7 @@ namespace FixedWidthLibraryCore.FixedWidth;
 
 public abstract class FixedWidthElement<T>(int start, int length) : FixedWidthAttribute(start, length)
 {
-    public abstract T Parse(ReadOnlySpan<char> line);
+    public new abstract T Parse(ReadOnlySpan<char> line);
 
     public abstract string SerializeToString(T? value);
 
