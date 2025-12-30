@@ -33,8 +33,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\FixedWidthLibrary.Core\FixedWidthLibrary.Core.csproj" PrivateAssets="none"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true"
               PackagePath="analyzers/dotnet/cs" Visible="false"/>
-        <None Include="README.md" Pack="true" PackagePath="\" />
+        <None Include="..\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>
