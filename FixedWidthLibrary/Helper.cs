@@ -16,6 +16,34 @@ public static class Helper
         return attributes.Any(ad => ad.AttributeClass?.Name == attributeName);
     }
 
+    public static bool HasFixedWidthAttribute(ISymbol it)
+    {
+        var attributes = it.GetAttributes();
+        return attributes.Any(ad => IsFixedWidthAttribute(ad.AttributeClass));
+    }
+
+    public static bool IsFixedWidthAttribute(INamedTypeSymbol? attributeClass)
+    {
+        if (attributeClass == null)
+            return false;
+
+        // Check if this is the FixedWidthAttribute directly
+        if (attributeClass.Name == "FixedWidthAttribute")
+            return true;
+
+        // Check if it inherits from FixedWidthElement<T>
+        var baseType = attributeClass.BaseType;
+        while (baseType != null)
+        {
+            if (baseType.Name == "FixedWidthElement" || 
+                baseType.OriginalDefinition?.Name == "FixedWidthElement")
+                return true;
+            baseType = baseType.BaseType;
+        }
+
+        return false;
+    }
+
     public static ImmutableArray<IPropertySymbol> GetPropertiesWithAttribute(ITypeSymbol namedTypeSymbol, string attributeName)
     {
         return
@@ -23,6 +51,16 @@ public static class Helper
             ..namedTypeSymbol.GetMembers()
                 .OfType<IPropertySymbol>()
                 .Where(x => HasAttributeWithName(x, attributeName))
+        ];
+    }
+
+    public static ImmutableArray<IPropertySymbol> GetPropertiesWithFixedWidthAttribute(ITypeSymbol namedTypeSymbol)
+    {
+        return
+        [
+            ..namedTypeSymbol.GetMembers()
+                .OfType<IPropertySymbol>()
+                .Where(HasFixedWidthAttribute)
         ];
     }
 
@@ -50,5 +88,11 @@ public static class Helper
     {
         return it.GetAttributes()
             .First(ad => ad.AttributeClass?.Name == attributeName);
+    }
+
+    public static AttributeData GetFixedWidthAttribute(ISymbol it)
+    {
+        return it.GetAttributes()
+            .First(ad => IsFixedWidthAttribute(ad.AttributeClass));
     }
 }
