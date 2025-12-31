@@ -84,7 +84,7 @@ public partial class TestClassFull
         };
     }
 
-    public const int TotalFixedWidthLength = 393;
+    public const int TotalFixedWidthLength = 294;
     public TestClassFull(ReadOnlySpan<char> line)
     {
         FirstName = FixedWidthMetaData.FirstName.Parse(line);
@@ -150,5 +150,10 @@ public partial class TestClassFull
         await FixedWidthMetaData.Height.WriteToStreamAsync(Height, streamWriter);
         await FixedWidthMetaData.D.WriteToStreamAsync(D, streamWriter);
         return stream;
+    }
+
+    public override string ToString()
+    {
+        return WriteToStringBuilder().ToString();
     }
 }

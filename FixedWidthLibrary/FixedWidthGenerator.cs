@@ -158,6 +158,11 @@ namespace {ns};
 
         return stream;
     }}
+
+    public override string ToString()
+    {{
+        return WriteToStringBuilder().ToString();
+    }}
 }}
 ";
     }
@@ -212,8 +217,8 @@ namespace {ns};
                     var fixedWidthPropertyAttribute = Helper.GetFixedWidthAttribute(x);
 
                     var start = (int)(fixedWidthPropertyAttribute.ConstructorArguments[0].Value ?? 0);
-                    var end = (int)(fixedWidthPropertyAttribute.ConstructorArguments[1].Value ?? 0);
-                    var length = end - start; // Calculate actual length from start and end positions
+                    var length = (int)(fixedWidthPropertyAttribute.ConstructorArguments[1].Value ?? 0);
+                    var end = start + length; // Calculate end position from start and length
 
                     var fixedWidthPropertiesAssignments = fixedWidthPropertyAttribute
                         .NamedArguments
