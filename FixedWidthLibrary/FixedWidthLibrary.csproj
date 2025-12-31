@@ -15,7 +15,7 @@
         <Product>FixedWidthLibrary</Product>
         <Title>FixedWidthLibrary - Source generator and analyzer</Title>
         <Description>Roslyn analyzer and source generator for building fixed-width record readers/writers from attributes. Use with FixedWidthLibrary.Core.</Description>
-        <PackageVersion>0.2.0</PackageVersion>
+        <PackageVersion>0.3.0</PackageVersion>
         <PackageProjectUrl>https://github.com/nathanpepin/FixedWidthLibrary</PackageProjectUrl>
         <RepositoryUrl>https://github.com/nathanpepin/FixedWidthLibrary</RepositoryUrl>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>

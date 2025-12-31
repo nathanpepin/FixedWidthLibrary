@@ -12,7 +12,7 @@
         <Product>FixedWidthLibrary</Product>
         <Title>FixedWidthLibrary.Core</Title>
         <Description>Core library for parsing and writing fixed-width records. Provides types, attributes, and helpers used by FixedWidthLibrary.</Description>
-        <PackageVersion>0.2.0</PackageVersion>
+        <PackageVersion>0.3.0</PackageVersion>
         <PackageProjectUrl>https://github.com/nathanpepin/FixedWidthLibrary</PackageProjectUrl>
         <RepositoryUrl>https://github.com/nathanpepin/FixedWidthLibrary</RepositoryUrl>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
