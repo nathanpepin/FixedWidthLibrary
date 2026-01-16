@@ -20,6 +20,8 @@ public class FixedWidthAbstract(string typeName, string nullableTypeName)
 };
 
 [Generator]
+
+
 public class FixedWidthGenerator : IIncrementalGenerator
 {
     public const string CoreNamespace = "FixedWidthLibraryCore.FixedWidth";
@@ -114,6 +116,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using {CoreNamespace};
+
+#nullable enable
 
 namespace {ns};
 
